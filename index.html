@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>xsukax Phone Validator</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif; background: #ffffff; color: #24292f; line-height: 1.5; }
+.container { max-width: 1000px; margin: 0 auto; padding: 24px; }
+.header { text-align: center; padding: 48px 24px; border-bottom: 1px solid #d0d7de; background: #f6f8fa; margin: -24px -24px 32px -24px; }
+.header h1 { font-size: 32px; font-weight: 600; margin-bottom: 8px; color: #24292f; }
+.header p { color: #57606a; font-size: 16px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-bottom: 24px; }
+.card { background: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; padding: 20px; }
+.card-header { font-size: 16px; font-weight: 600; color: #24292f; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #d0d7de; }
+.input-group { margin-bottom: 16px; }
+.input-group label { display: block; font-size: 12px; font-weight: 600; color: #24292f; margin-bottom: 6px; }
+.input { width: 100%; padding: 5px 12px; font-size: 14px; line-height: 20px; color: #24292f; background-color: #ffffff; border: 1px solid #d0d7de; border-radius: 6px; outline: none; }
+.input:focus { border-color: #0969da; box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.12); }
+.btn { display: inline-block; padding: 5px 16px; font-size: 14px; font-weight: 600; line-height: 20px; color: #ffffff; background-color: #2da44e; border: 1px solid rgba(27, 31, 36, 0.15); border-radius: 6px; cursor: pointer; transition: all 0.15s; width: 100%; }
+.btn:hover { background-color: #2c974b; }
+.btn:active { background-color: #298e46; }
+.result { margin-top: 16px; padding: 16px; background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; display: none; }
+.result.show { display: block; animation: fadeIn 0.2s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+.result-success { background: #dafbe1; border-color: #2da44e; }
+.result-error { background: #ffebe9; border-color: #cf222e; }
+.result-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid rgba(0, 0, 0, 0.06); }
+.flag { font-size: 32px; line-height: 1; }
+.result-title { flex: 1; }
+.result-title h3 { font-size: 16px; font-weight: 600; color: #24292f; margin-bottom: 2px; }
+.result-title p { font-size: 12px; color: #57606a; }
+.info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+.info-item { background: #ffffff; padding: 10px; border: 1px solid #d0d7de; border-radius: 4px; }
+.info-label { font-size: 11px; font-weight: 600; color: #57606a; text-transform: uppercase; margin-bottom: 4px; }
+.info-value { font-size: 14px; font-weight: 600; color: #24292f; word-break: break-all; }
+.country-list { max-height: 450px; overflow-y: auto; border: 1px solid #d0d7de; border-radius: 6px; margin-top: 16px; }
+.country-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-bottom: 1px solid #d0d7de; transition: background 0.15s; }
+.country-item:last-child { border-bottom: none; }
+.country-item:hover { background: #f6f8fa; }
+.country-flag { font-size: 24px; line-height: 1; }
+.country-info { flex: 1; }
+.country-name { font-size: 14px; font-weight: 600; color: #24292f; }
+.country-code { font-size: 12px; color: #57606a; }
+.search-wrapper { position: relative; }
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #57606a; font-size: 14px; }
+.search-input { padding-left: 36px; }
+.stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+.stat-card { background: #f6f8fa; border: 1px solid #d0d7de; border-radius: 6px; padding: 20px; text-align: center; }
+.stat-value { font-size: 28px; font-weight: 600; color: #24292f; margin-bottom: 4px; }
+.stat-label { font-size: 12px; color: #57606a; }
+.footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #d0d7de; text-align: center; color: #57606a; font-size: 12px; }
+.footer a { color: #0969da; text-decoration: none; font-weight: 500; }
+.footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>📱 xsukax Phone Validator</h1>
+    <p>Validate phone numbers and identify operators across 180+ countries</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-value" id="totalCountries">181</div>
+      <div class="stat-label">Supported Countries</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="totalOperators">50</div>
+      <div class="stat-label">Operator Databases</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- Phone Number Validator -->
+    <div class="card">
+      <div class="card-header">🔍 Validate Phone Number</div>
+      <div class="input-group">
+        <label for="phoneInput">Phone Number</label>
+        <input type="tel" id="phoneInput" class="input" placeholder="+1 555 123 4567">
+      </div>
+      <button class="btn" onclick="validatePhone()">Validate & Identify</button>
+      <div id="phoneResult" class="result"></div>
+    </div>
+
+    <!-- Country Search -->
+    <div class="card">
+      <div class="card-header">🌍 Search Countries</div>
+      <div class="input-group">
+        <label for="countrySearch">Country Name or Code</label>
+        <div class="search-wrapper">
+          <span class="search-icon">🔎</span>
+          <input type="text" id="countrySearch" class="input search-input" placeholder="United States, US, or +1" oninput="searchCountries()">
+        </div>
+      </div>
+      <div class="country-list" id="countryResults" style="display: none;"></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    Developed by <strong>xsukax</strong> • 
+    <a href="https://github.com/xsukax" target="_blank">GitHub</a> • 
+    Licensed under GPL-3
+  </div>
+</div>
+
+<script src="xPhoneValidator.js"></script>
+<script>
+// Initialize
+const validator = new PhoneValidator();
+
+// Update stats with actual counts
+function updateStats() {
+  const countries = validator.getCountries();
+  document.getElementById('totalCountries').textContent = countries.length;
+}
+
+// Validate phone number
+function validatePhone() {
+  const input = document.getElementById('phoneInput').value.trim();
+  const box = document.getElementById('phoneResult');
+  
+  if (!input) {
+    box.className = 'result show result-error';
+    box.innerHTML = '<strong>Error:</strong> Please enter a phone number';
+    return;
+  }
+  
+  const result = validator.identify(input);
+  
+  if (result.error) {
+    box.className = 'result show result-error';
+    box.innerHTML = '<strong>Error:</strong> ' + result.error;
+    return;
+  }
+  
+  box.className = 'result show result-success';
+  box.innerHTML = `
+    <div class="result-header">
+      <div class="flag">${result.flag}</div>
+      <div class="result-title">
+        <h3>${result.flag} ${result.country}</h3>
+        <p>${result.countryCode} • +${result.callingCode}</p>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-label">Operator</div>
+        <div class="info-value">${result.operator}</div>
+      </div>
+      <div class="info-item">
+        <div class="info-label">National Number</div>
+        <div class="info-value">${result.nationalNumber}</div>
+      </div>
+      <div class="info-item" style="grid-column: 1 / -1;">
+        <div class="info-label">International Format</div>
+        <div class="info-value">${result.international}</div>
+      </div>
+      <div class="info-item" style="grid-column: 1 / -1;">
+        <div class="info-label">E.164 Format</div>
+        <div class="info-value">${result.e164}</div>
+      </div>
+    </div>
+  `;
+}
+
+// Search countries
+function searchCountries() {
+  const query = document.getElementById('countrySearch').value.trim();
+  const resultsBox = document.getElementById('countryResults');
+  
+  if (!query) {
+    resultsBox.style.display = 'none';
+    return;
+  }
+  
+  const results = validator.searchCountry(query);
+  
+  if (results.length === 0) {
+    resultsBox.style.display = 'block';
+    resultsBox.innerHTML = '<div style="padding: 16px; text-align: center; color: #57606a;">No countries found</div>';
+    return;
+  }
+  
+  resultsBox.style.display = 'block';
+  resultsBox.innerHTML = results.map(c => `
+    <div class="country-item">
+      <div class="country-flag">${c.flag}</div>
+      <div class="country-info">
+        <div class="country-name">${c.flag} ${c.name}</div>
+        <div class="country-code">+${c.callingCode} (${c.code})</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Enter key support
+document.getElementById('phoneInput').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') validatePhone();
+});
+
+// Initialize stats
+updateStats();
+</script>
+
+</body>
+</html>
